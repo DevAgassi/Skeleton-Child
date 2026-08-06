@@ -1,0 +1,70 @@
+<footer id="footer" class="page-footer relative pt-fluid-xl pb-fluid-md px-(--container-px)">
+	<div class="max-w-(--wp--style--global--wide-size) mx-auto relative">
+		{# ══════════════════════════════════════════════════════════════════════
+		   MOBILE layout — flat flex-wrap tiles, hidden on lg+
+		   ══════════════════════════════════════════════════════════════════════ #}
+		<div class="lg:hidden mb-10 pt-6">
+			{# Logo + tagline #}
+			<div class="flex flex-col gap-4 mb-4 items-center text-center pb-4 footer-content">
+				{{ function('get_custom_logo')|raw }}
+				{% if options.footer_tagline %}
+					<p class="text-sm leading-relaxed max-w-xs">{{ options.footer_tagline }}</p>
+				{% endif %}
+			</div>
+
+			{# All menu links as flat pills #}
+			<div class="flex flex-wrap gap-2">
+				{% if footer_menu %}
+					{% for item in footer_menu.get_items %}
+						{% for child in item.children %}
+							<a href="{{ child.link }}" title="{{ child.title }}" class="footer-nav-link">
+								{{ child.title }}
+							</a>
+						{% endfor %}
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+
+		{# ══════════════════════════════════════════════════════════════════════
+		   DESKTOP layout — column grid, hidden below lg
+		   ══════════════════════════════════════════════════════════════════════ #}
+		<div class="hidden lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr] gap-8 mb-10">
+			{# Column 1: Logo + tagline #}
+			<div class="flex flex-col gap-5">
+				{{ function('get_custom_logo')|raw }}
+				{% if options.footer_tagline %}
+					<p class="text-sm leading-relaxed max-w-xs">{{ options.footer_tagline }}</p>
+				{% endif %}
+			</div>
+
+			{# Remaining columns: footer menu parent items as headings #}
+			{% if footer_menu %}
+				{% for item in footer_menu.get_items %}
+					<div class="flex flex-col gap-4">
+						<h4 class="footer-col-heading">{{ item.title }}</h4>
+						{% if item.children %}
+							<ul class="flex flex-col gap-2">
+								{% for child in item.children %}
+									<li>
+										<a href="{{ child.link }}" title="{{ child.title }}" class="footer-nav-link">
+											{{ child.title }}
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		{# ── Copyright bar — always visible ────────────────────────────────── #}
+		<div class="footer-copyright">
+			<p class="text-sm text-neutral-content">
+				&copy; {{ "now"|date("Y") }} {{ function('bloginfo', 'name') }}.
+				{{ __('All rights reserved.', 'skeleton') }}
+			</p>
+		</div>
+	</div>
+</footer>

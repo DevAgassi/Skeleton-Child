@@ -1,0 +1,32 @@
+{% extends 'views/base.twig' %}
+
+{% block content %}
+	{% if post %}
+		<div class="wp-block-post-content is-layout-constrained">{{ post.content }}</div>
+	{% endif %}
+
+	{% if posts %}
+		<div class="max-w-(--wp--style--global--wide-size) mx-auto px-(--container-px) py-16">
+			<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+				{% for post in posts %}
+					<article class="post-card post-card-home">
+						<h3 class="post-card__title">
+							<a href="{{ post.link }}" title="{{ post.title }}">{{ post.title }}</a>
+						</h3>
+
+						<div class="post-card__footer">
+							<time class="post-card__date" datetime="{{ post.date('Y-m-d') }}">
+								{{ post.date('F j, Y') }}
+							</time>
+							<a href="{{ post.link }}" title="{{ post.title }}" class="btn btn-primary btn-block">
+								{{ __('Read More', 'skeleton') }}
+							</a>
+						</div>
+					</article>
+				{% endfor %}
+			</div>
+
+			{% include "ui/components/pagination.twig" %}
+		</div>
+	{% endif %}
+{% endblock %}

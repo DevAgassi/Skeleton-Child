@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "name": "theme/social-share",
+  "title": "Social Share",
+  "description": "Share buttons for X, Facebook, LinkedIn and Reddit. Place in the Single Post widget area.",
+  "keywords": ["share", "social", "twitter", "facebook", "linkedin", "reddit"],
+  "category": "custom-theme",
+  "icon": {
+    "src": "share",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "attributes": {
+    "align":        { "type": "string" },
+    "showX":        { "type": "boolean", "default": true },
+    "showFacebook": { "type": "boolean", "default": true },
+    "showLinkedin":  { "type": "boolean", "default": true },
+    "showReddit":   { "type": "boolean", "default": true }
+  },
+  "supports": {
+    "multiple": false,
+    "html": false,
+    "align": ["wide"]
+  },
+  "example": {},
+  "apiVersion": 3
+}

@@ -1,0 +1,42 @@
+<section {{ wrapper_attrs|raw }}>
+	{% if block.image %}
+		<img
+			class="cta-section__bg"
+			src="{{ block.image.url }}"
+			alt="{{ block.image.alt }}"
+			loading="lazy"
+		>
+	{% endif %}
+
+	<div class="cta-section__overlay"></div>
+
+	<div class="cta-section__content{{ block.content_align ? ' ' ~ block.content_align : '' }}">
+		{% if block.title %}
+			<h2 {{ acf_inline_text('title') }} class="cta-section__title">
+				{{ block.title }}
+			</h2>
+		{% endif %}
+
+		{% if block.subtitle %}
+			<p {{ acf_inline_text('subtitle') }} class="cta-section__subtitle">
+				{{ block.subtitle }}
+			</p>
+		{% endif %}
+
+		{% if block.primary_button.url or block.secondary_button.url %}
+			<div class="cta-section__actions">
+				{% if block.primary_button.url %}
+					<a href="{{ block.primary_button.url }}" {{ acf_inline_toolbar('primary_button') }} class="btn btn-primary" {% if block.primary_button.target %}target="{{ block.primary_button.target }}" rel="noopener noreferrer"{% endif %}>
+						{{ block.primary_button.title }}
+					</a>
+				{% endif %}
+
+				{% if block.secondary_button.url %}
+					<a href="{{ block.secondary_button.url }}" {{ acf_inline_toolbar('secondary_button') }} class="btn btn-outline" {% if block.secondary_button.target %}target="{{ block.secondary_button.target }}" rel="noopener noreferrer"{% endif %}>
+						{{ block.secondary_button.title }}
+					</a>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</section>

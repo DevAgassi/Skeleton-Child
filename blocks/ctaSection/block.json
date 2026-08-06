@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/cta-section",
+  "title": "CTA Section",
+  "description": "Call-to-action section with heading, subtitle, up to two buttons and optional background image.",
+  "keywords": ["cta", "call to action", "button", "banner", "conversion"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "megaphone",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/ctaSection/preview.png"
+      }
+    }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": true,
+    "renderCallback": "App\\Blocks\\CtaSection\\Block::renderCallback"
+  }
+}

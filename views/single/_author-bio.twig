@@ -1,0 +1,26 @@
+{% if author and author.meta('description') %}
+{% set avatar_id = author.meta('avatar') %}
+<div class="author-bio">
+	<div class="container-content">
+		<div class="author-bio__inner">
+
+		<div class="author-bio__avatar" aria-hidden="true">
+			<img
+				src="{{ avatar_id ? attachment_url(avatar_id, 'medium') : author.avatar({ size: 160 }) }}"
+				alt="{{ author.name }}"
+				width="80"
+				height="80"
+				loading="lazy"
+			/>
+		</div>
+
+		<div class="author-bio__body">
+			<span class="author-bio__label">{{ __('Written by', 'skeleton') }}</span>
+			<a class="author-bio__name" href="{{ author.link }}">{{ author.name }}</a>
+			<p class="author-bio__desc">{{ author.meta('description') }}</p>
+		</div>
+
+		</div>
+	</div>
+</div>
+{% endif %}

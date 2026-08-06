@@ -1,0 +1,33 @@
+<section {{ wrapper_attrs|raw }}>
+	<div class="acc" data-accordion>
+
+		{% if block.title %}
+			<h3 {{ acf_inline_text('title') }} class="acc__title text-h3 font-bold mb-6">{{ block.title }}</h3>
+		{% endif %}
+
+		<div class="acc__list">
+			{% for item in block.items %}
+				<div class="acc__item" data-accordion-item>
+
+					<button
+						class="acc__trigger"
+						data-accordion-trigger
+						aria-expanded="false"
+						type="button"
+					>
+						<span class="acc-icon" aria-hidden="true"></span>
+						<span class="acc__label text-base font-normal leading-normal flex-1">{{ item.label }}</span>
+					</button>
+
+					<div class="acc__content" data-accordion-content aria-hidden="true">
+						<div class="acc__content-inner pb-5 pl-10 text-base leading-[1.7]">
+							{{ item.description|raw }}
+						</div>
+					</div>
+
+				</div>
+			{% endfor %}
+		</div>
+
+	</div>
+</section>

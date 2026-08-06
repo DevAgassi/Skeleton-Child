@@ -1,0 +1,20 @@
+<a href="{{ post.link }}" class="pg-card pg-card--overlay">
+	{% if post.thumbnail %}
+		{% include 'ui/components/image.twig' with {
+			'id':              post.thumbnail.ID,
+			'picture_classes': 'pg-card__media',
+			'classes':         'w-full h-full object-cover',
+			'sizes':           '(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw',
+			'disableLoading':  false,
+		} only %}
+	{% else %}
+		<div class="pg-card__media"></div>
+	{% endif %}
+
+	<div class="pg-card__overlay">
+		<h3 class="pg-card__title">{{ post.title }}</h3>
+		{% if post.excerpt %}
+			<p class="pg-card__excerpt">{{ post.excerpt | striptags | trim }}</p>
+		{% endif %}
+	</div>
+</a>

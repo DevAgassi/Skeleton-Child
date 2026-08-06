@@ -1,0 +1,77 @@
+.hero-block {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	overflow: hidden;
+	isolation: isolate;
+	padding-block: 4rem;
+
+	/* Local aliases over the global media tokens — override here for a
+	   block-specific look without touching the theme. */
+	--hero-overlay-color: var(--color-scrim);
+	--hero-media-content: var(--color-on-media);
+
+	/* ── Height variants (extend per project: new option + one line here) ── */
+	&.hero--h-medium { min-height: 60svh; }
+	&.hero--h-full   { min-height: 100svh; }
+
+	/* ── Media layer: image or video ── */
+	.hero__media {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero__overlay {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: var(--hero-overlay-color);
+		opacity: var(--hero-overlay, 0.5);
+	}
+
+	&.hero--basic .hero__overlay {
+		display: none;
+	}
+
+	/* ── Content ── */
+	.hero__body {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.25rem;
+		max-width: 44rem;
+	}
+
+	.hero__title {
+		font-size: clamp(2rem, 5vw, 3.5rem);
+		line-height: 1.1;
+		font-weight: 700;
+	}
+
+	.hero__subtitle {
+		font-size: clamp(1rem, 2vw, 1.25rem);
+		color: var(--color-text-secondary);
+	}
+
+	.hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+	}
+
+	/* Text over media needs light content regardless of theme */
+	&.hero--image,
+	&.hero--video {
+		color: var(--hero-media-content);
+
+		.hero__subtitle {
+			color: color-mix(in srgb, var(--hero-media-content), transparent 15%);
+		}
+	}
+}

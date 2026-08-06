@@ -1,0 +1,28 @@
+{
+  "plugins": ["prettier-plugin-jinja-template", "@prettier/plugin-php"],
+  "overrides": [
+    {
+      "files": ["*.twig"],
+      "options": {
+        "parser": "jinja-template",
+        "printWidth": 120,
+        "tabWidth": 4,
+        "useTabs": true,
+        "htmlWhitespaceSensitivity": "ignore"
+      }
+    },
+    {
+      "files": ["*.php"],
+      "options": {
+        "parser": "php",
+        "printWidth": 120,
+        "tabWidth": 4,
+        "useTabs": false,
+        "singleQuote": true,
+        "trailingCommaPHP": true,
+        "phpVersion": "8.1",
+        "braceStyle": "psr-2"
+      }
+    }
+  ]
+}

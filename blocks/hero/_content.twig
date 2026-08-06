@@ -1,0 +1,31 @@
+{# Shared content chunk — included by every hero type partial.
+   A future project-specific type (form, countdown, …) may skip it entirely. #}
+<div class="hero__body">
+	{% if block.title %}
+		<{{ block.title_tag }} {{ acf_inline_text('title') }} class="hero__title">
+			{{ block.title }}
+		</{{ block.title_tag }}>
+	{% endif %}
+
+	{% if block.subtitle %}
+		<p {{ acf_inline_text('subtitle') }} class="hero__subtitle">
+			{{ block.subtitle }}
+		</p>
+	{% endif %}
+
+	{% if block.primary_button.url or block.secondary_button.url %}
+		<div class="hero__actions">
+			{% if block.primary_button.url %}
+				<a href="{{ block.primary_button.url }}" {{ acf_inline_toolbar('primary_button') }} class="btn btn-primary btn-xl" {% if block.primary_button.target %}target="{{ block.primary_button.target }}" rel="noopener noreferrer"{% endif %}>
+					{{ block.primary_button.title }}
+				</a>
+			{% endif %}
+
+			{% if block.secondary_button.url %}
+				<a href="{{ block.secondary_button.url }}" {{ acf_inline_toolbar('secondary_button') }} class="btn btn-outline btn-xl" {% if block.secondary_button.target %}target="{{ block.secondary_button.target }}" rel="noopener noreferrer"{% endif %}>
+					{{ block.secondary_button.title }}
+				</a>
+			{% endif %}
+		</div>
+	{% endif %}
+</div>

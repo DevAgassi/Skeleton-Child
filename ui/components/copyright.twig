@@ -1,0 +1,13 @@
+{#
+  Copyright badge overlay for images. Parent must have position: relative.
+
+  Params:
+    label (string, optional) — tooltip text; falls back to get_copyright()
+
+  Styles: resources/css/components/image-overlays.css
+#}
+{% set label = label is defined and label ? label : get_copyright() %}
+<div class="img-copyright">
+	<span class="img-copyright__badge" aria-label="{{ label }}">&#169;</span>
+	<span class="img-copyright__tooltip" role="tooltip">{{ label }}</span>
+</div>

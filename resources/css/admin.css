@@ -1,0 +1,10 @@
+/**
+ * Editor composition — the project bundle plus the engine's editor-only fixes.
+ *
+ * Points at this root's app.css, so block previews in the editor are styled
+ * with the project's stylesheet rather than the engine's.
+ */
+
+@import "./app.css";
+
+@import "../../../Skeleton/resources/css/vendor/editor.css";

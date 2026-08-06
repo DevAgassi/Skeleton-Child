@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/text-with-image",
+  "title": "Text with Image",
+  "description": "Two-column layout: label, title, text, optional CTA and image. Stacks on mobile.",
+  "keywords": ["text", "image", "feature", "split", "content"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "align-pull-right",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/textWithImage/preview.png"
+      }
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": false,
+    "renderCallback": "App\\Blocks\\TextWithImage\\Block::renderCallback"
+  }
+}

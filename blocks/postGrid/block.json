@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/post-grid",
+  "title": "Post Grid",
+  "description": "Displays a filterable grid of posts or custom post types with Show More and Explore link.",
+  "keywords": ["posts", "grid", "filter", "archive"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "grid-view",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/postGrid/preview.png"
+      }
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": true,
+    "renderCallback": "App\\Blocks\\PostGrid\\Block::renderCallback"
+  }
+}

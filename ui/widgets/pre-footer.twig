@@ -1,0 +1,16 @@
+{#
+  Pre-footer widget zone — the reference implementation for widget areas.
+
+  The zone is registered and drawn from functions/wp/sidebars.php, which hooks
+  it into the skeleton/layout/pre_footer slot in views/base.twig. The shell
+  itself knows nothing about this zone.
+
+  The component gates on its own content, so an empty zone renders nothing and
+  no caller has to keep a visibility flag in sync.
+
+  Params (Timber::render passes no global context, so these are all it sees):
+    pre_footer_sidebar (string, required) — rendered widget-zone HTML
+#}
+{% if pre_footer_sidebar %}
+	<div class="pre-footer-widget-zone">{{ pre_footer_sidebar }}</div>
+{% endif %}

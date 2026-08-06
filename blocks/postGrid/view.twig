@@ -1,0 +1,89 @@
+<section {{ wrapper_attrs|raw }}
+	{{ acf_inline_toolbar(
+		block.selection_type == 'manual'
+			? ['selection_type', 'posts', 'card_style']
+			: ['selection_type', 'taxonomy_type', 'max_posts', 'category_terms', 'tag_terms', 'card_style']
+	) }}
+	data-wp-interactive="postGrid"
+	{{ wp_context|raw }}
+>
+
+	{# ── Header ── #}
+	<div class="pg-header">
+		<h2
+			{{ acf_inline_text('title') }}
+			class="pg-title text-h2 font-bold"
+		>{{ block.title }}</h2>
+
+		{% if block.explore_link and not block.has_filters %}
+			<a
+				{{ acf_inline_toolbar('explore_link') }}
+				href="{{ block.explore_link.url }}"
+				class="pg-explore"
+				{% if block.explore_link.target %}target="{{ block.explore_link.target }}" rel="noopener noreferrer"{% endif %}
+			>
+				{{ block.explore_link.title }}
+				<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+					<path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</a>
+		{% endif %}
+	</div>
+
+	{# ── Filters (taxonomy mode, multiple terms) ── #}
+	{% if block.has_filters %}
+		<div class="pg-filters" role="tablist" aria-label="{{ __('Filter posts', 'skeleton') }}">
+			<button
+				class="pg-filter is-active"
+				role="tab"
+				data-wp-context='{"filterSlug":"all"}'
+				data-wp-on--click="actions.setFilter"
+				data-wp-class--is-active="callbacks.isFilterActive"
+				data-wp-bind--aria-selected="callbacks.isFilterActive"
+			>{{ __('All', 'skeleton') }}</button>
+
+			{% for filter in block.filters %}
+				<button
+					class="pg-filter"
+					role="tab"
+					data-wp-context='{"filterSlug":"{{ filter.slug }}"}'
+					data-wp-on--click="actions.setFilter"
+					data-wp-class--is-active="callbacks.isFilterActive"
+					data-wp-bind--aria-selected="callbacks.isFilterActive"
+				>{{ filter.label }} <span class="pg-filter__count">{{ filter.count }}</span></button>
+			{% endfor %}
+
+			{% if block.explore_link %}
+				<a
+					{{ acf_inline_toolbar('explore_link') }}
+					href="{{ block.explore_link.url }}"
+					class="pg-explore pg-explore--filters"
+					{% if block.explore_link.target %}target="{{ block.explore_link.target }}" rel="noopener noreferrer"{% endif %}
+				>
+					{{ block.explore_link.title }}
+					<svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+						<path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			{% endif %}
+		</div>
+	{% endif %}
+
+	{# ── Grid ── #}
+	<div class="pg-grid">
+		{% for item in block.posts %}
+			<article
+				class="pg-item"
+				data-wp-context='{"itemTerms":{{ item.terms|json_encode }}}'
+				data-wp-bind--hidden="callbacks.isItemHidden"
+			>
+				{% if block.card_style == 'overlay' %}
+					{% include 'blocks/postGrid/_card-overlay.twig' with {'post': item.post} only %}
+				{% else %}
+					{% include 'blocks/postGrid/_card-standard.twig' with {'post': item.post} only %}
+				{% endif %}
+			</article>
+		{% endfor %}
+	</div>
+
+</section>

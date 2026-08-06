@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/content-slider",
+  "title": "Content Slider",
+  "description": "Two-column slider: content panel (label, title, description, link, CTA) + full-height image. Navigation in content panel, pagination over image.",
+  "keywords": ["slider", "carousel", "content", "image"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "slides",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/contentSlider/preview.png"
+      }
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": false,
+    "renderCallback": "App\\Blocks\\ContentSlider\\Block::renderCallback"
+  }
+}

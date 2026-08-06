@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/hero",
+  "title": "Hero",
+  "description": "Hero section with selectable type: basic, image background or self-hosted video background.",
+  "keywords": ["hero", "banner", "intro", "header", "video"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "cover-image",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/hero/preview.png"
+      }
+    }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": true,
+    "renderCallback": "App\\Blocks\\Hero\\Block::renderCallback"
+  }
+}

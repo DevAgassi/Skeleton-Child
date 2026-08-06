@@ -1,0 +1,27 @@
+<div class="py-16 {{ is_centered ? 'max-w-3xl mx-auto text-center' : 'max-w-2xl' }}">
+
+	{% if block.label %}
+		<div class="flex items-center gap-4 mb-6 {{ is_centered ? 'justify-center' : '' }}">
+			<span class="w-12 h-px bg-secondary"></span>
+			<span {{ acf_inline_text('label') }} class="text-xs font-semibold uppercase tracking-widest text-secondary whitespace-nowrap">{{ block.label }}</span>
+			<span class="w-12 h-px bg-secondary"></span>
+		</div>
+	{% endif %}
+
+	{% if block.title %}
+		<h2 {{ acf_inline_text('title') }} class="text-h2 font-bold mb-6">{{ block.title }}</h2>
+	{% endif %}
+
+	{% if block.description %}
+		<div class="twi-content flow text-base" {{ acf_inline_toolbar('description') }}>{{ block.description }}</div>
+	{% endif %}
+
+	{% if block.cta and block.cta.url %}
+		<div class="mt-8">
+			<a {{ acf_inline_toolbar('cta') }} href="{{ block.cta.url }}" {{ block.cta.target ? 'target="' ~ block.cta.target ~ '" rel="noopener noreferrer"' : '' }} class="btn btn-primary btn-lg">
+				{{ block.cta.title }}
+			</a>
+		</div>
+	{% endif %}
+
+</div>

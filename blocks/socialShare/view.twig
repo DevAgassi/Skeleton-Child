@@ -1,0 +1,21 @@
+<section {{ wrapper_attrs|raw }}>
+	<p class="social-share__label">{{ __('Share this article', 'skeleton') }}</p>
+	<ul class="social-share__list" role="list">
+		{% for network in block.networks %}
+		<li>
+			<a
+				class="social-share__btn social-share__btn--{{ network.id }}"
+				href="{{ network.url }}"
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label="{{ __('Share on', 'skeleton') }} {{ network.label }}"
+			>
+				<svg class="social-share__icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor">
+					{{ network.icon|raw }}
+				</svg>
+				{% if network.id != 'x' %}<span>{{ network.label }}</span>{% endif %}
+			</a>
+		</li>
+		{% endfor %}
+	</ul>
+</section>

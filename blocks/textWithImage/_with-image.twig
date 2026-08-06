@@ -1,0 +1,55 @@
+<div class="flex flex-col gap-fluid-xl py-fluid-xl lg:grid lg:grid-cols-2 lg:items-center">
+
+	{# ── Text column ── #}
+	<div class="flex flex-col gap-6 {{ image_left ? 'lg:order-last' : '' }} {{ is_centered ? 'items-center text-center' : '' }}">
+
+		{% if block.label %}
+			<div class="flex items-center gap-4 w-full {{ is_centered ? 'justify-center' : '' }}">
+				<span class="w-12 h-px bg-secondary"></span>
+				<span {{ acf_inline_text('label') }} class="text-xs font-semibold uppercase tracking-widest text-secondary whitespace-nowrap">{{ block.label }}</span>
+				<span class="w-12 h-px bg-secondary"></span>
+			</div>
+		{% endif %}
+
+		{% if block.title %}
+			<h2 {{ acf_inline_text('title') }} class="text-h2 font-bold">{{ block.title }}</h2>
+		{% endif %}
+
+		{% if block.description %}
+			<div class="twi-content flow text-base" {{ acf_inline_toolbar('description') }}>{{ block.description }}</div>
+		{% endif %}
+
+		{% if block.cta and block.cta.url %}
+			<div class="{{ is_centered ? '' : 'self-start' }}">
+				<a {{ acf_inline_toolbar('cta') }} href="{{ block.cta.url }}" {{ block.cta.target ? 'target="' ~ block.cta.target ~ '" rel="noopener noreferrer"' : '' }} class="btn btn-primary btn-lg">
+					{{ block.cta.title }}
+				</a>
+			</div>
+		{% endif %}
+
+	</div>
+
+	{# ── Image column ── #}
+	<div
+		{{ acf_inline_toolbar(['image', 'image_aspect', 'image_aspect_mobile']) }}
+		class="flex items-center justify-center {{ image_left ? 'lg:order-first' : '' }}"
+	>
+		<div class="twi-img-wrap relative w-full rounded-lg overflow-hidden"{% if twi_style %} style="{{ twi_style }}"{% endif %}>
+			{% include 'ui/components/image.twig' with {
+				'id': block.image.ID,
+				'picture_classes': 'contents',
+				'classes': 'w-full object-cover',
+				'sizes': '(max-width: 1023px) 100vw, 50vw',
+				'disableLoading': false,
+				'alt': block.image.alt|default('')
+			} only %}
+			{% include 'ui/components/image-overlays.twig' with {
+				'id': block.image.ID,
+				'alt': block.image.alt|default(''),
+				'sandbox': show_sandbox,
+				'copyright': show_copyright
+			} only %}
+		</div>
+	</div>
+
+</div>

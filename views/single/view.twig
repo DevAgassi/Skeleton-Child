@@ -1,0 +1,56 @@
+{% extends 'views/base.twig' %}
+
+{% block content %}
+
+	{# ── Post Hero ── #}
+	<section class="post-hero relative flex flex-col overflow-hidden">
+
+		{# Background image #}
+		{% if post.thumbnail %}
+			<div class="absolute inset-0" aria-hidden="true">
+				<img
+					class="w-full h-full object-cover"
+					src="{{ post.thumbnail.src('full') }}"
+					alt="{{ post.thumbnail.alt|default(post.title) }}"
+					loading="eager"
+				/>
+			</div>
+		{% endif %}
+
+		{# Gradient overlay #}
+		<div class="post-hero__overlay absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+
+		{# Content — pushed to bottom via mt-auto, left on mobile / center on desktop #}
+		<div class="post-hero__content relative z-10 w-full px-(--container-px)">
+			<div class="container-content flex flex-col items-start md:items-center gap-fluid-md text-left md:text-center">
+
+				<span class="badge badge-primary">{{ __('News', 'skeleton') }}</span>
+
+				<h1 class="text-h1 font-extrabold leading-[1.1] text-on-media">{{ post.title }}</h1>
+
+				<time class="text-on-media/60 text-lg" datetime="{{ post.date('Y-m-d') }}">
+					{{ post.date('F j, Y') }}
+				</time>
+
+			</div>
+		</div>
+
+	</section>
+
+	{# ── Article body ── #}
+	<article class="is-layout-constrained flow py-fluid-xl">
+		{{ post.content|raw }}
+	</article>
+
+	{# ── Social share ── #}
+	{% if share_sidebar %}
+		{{ share_sidebar|raw }}
+	{% endif %}
+
+	{# ── Author bio ── #}
+	{% include 'views/single/_author-bio.twig' with { author: post.author } %}
+
+	{# ── Comments ── #}
+	{% include 'views/single/_comments.twig' %}
+
+{% endblock %}

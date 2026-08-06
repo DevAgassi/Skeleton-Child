@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/marquee",
+  "title": "Marquee Logos",
+  "description": "Infinite scrolling logo strip with optional links.",
+  "keywords": ["marquee", "logos", "brands", "scroll", "ticker"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "slides",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/marquee/preview.png"
+      }
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": false,
+    "renderCallback": "App\\Blocks\\Marquee\\Block::renderCallback"
+  }
+}

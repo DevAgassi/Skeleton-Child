@@ -1,0 +1,92 @@
+<section {{ wrapper_attrs|raw }}>
+
+	{% if block.slides %}
+		<div
+			class="cs-slider"
+			data-cs-slider
+			data-autoplay="{{ block.autoplay ? '1' : '0' }}"
+			data-loop="{{ block.loop ? '1' : '0' }}"
+		>
+			<div class="swiper cs-swiper">
+				<div class="swiper-wrapper">
+					{% for slide in block.slides %}
+						<div class="swiper-slide">
+							<div class="cs-slide">
+
+								{# ── Content panel ── #}
+								<div class="cs-content">
+									<div class="cs-content-inner">
+										{% if slide.label %}
+											<span class="cs-label">{{ slide.label }}</span>
+										{% endif %}
+
+										{% if slide.title %}
+											<h3 class="cs-title">{{ slide.title }}</h3>
+										{% endif %}
+
+										<div class="cs-desc">{{ slide.description }}</div>
+
+										{% if slide.link %}
+											<a
+												href="{{ slide.link.url }}"
+												class="cs-link"
+												{% if slide.link.target %}target="{{ slide.link.target }}" rel="noopener noreferrer"{% endif %}
+											>{{ slide.link.title }}</a>
+										{% endif %}
+
+										{% if slide.button %}
+											<a
+												href="{{ slide.button.url }}"
+												class="btn btn-primary cs-cta"
+												{% if slide.button.target %}target="{{ slide.button.target }}" rel="noopener noreferrer"{% endif %}
+											>{{ slide.button.title }}</a>
+										{% endif %}
+									</div>
+								</div>
+
+								{# ── Image panel ── #}
+								<div class="cs-image">
+									{% if slide.image %}
+										{% include 'ui/components/image.twig' with {
+											'id':             slide.image.ID,
+											'picture_classes': 'cs-picture',
+											'classes':        'w-full h-full object-cover',
+											'sizes':          '(max-width: 1023px) 100vw, 60vw',
+											'disableLoading': loop.first,
+										} only %}
+										{% include 'ui/components/image-overlays.twig' with {
+											'id':        slide.image.ID,
+											'copyright': block.show_copyright,
+											'sandbox':   block.show_sandbox,
+										} only %}
+									{% endif %}
+								</div>
+
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+			</div>
+
+			{# Pagination — direct child of cs-slider, positioned over image via CSS #}
+			<div class="swiper-pagination cs-pagination"></div>
+
+			{# Nav buttons #}
+			<div class="cs-bottom">
+				<button class="cs-btn cs-btn-prev" type="button" aria-label="{{ __('Previous slide', 'skeleton') }}">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+						<path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+				<button class="cs-btn cs-btn-next" type="button" aria-label="{{ __('Next slide', 'skeleton') }}">
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+						<path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+			</div>
+
+		</div>
+	{% endif %}
+
+</section>

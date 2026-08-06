@@ -1,0 +1,37 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/tabs",
+  "title": "Tabs",
+  "description": "Horizontal tabbed content — click tab to switch panels.",
+  "keywords": ["tabs", "toggle", "switch", "panels"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "table-row-before",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": false,
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/tabs/preview.png"
+      }
+    }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": false,
+    "renderCallback": "App\\Blocks\\Tabs\\Block::renderCallback"
+  }
+}

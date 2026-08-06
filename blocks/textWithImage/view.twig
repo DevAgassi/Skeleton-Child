@@ -1,0 +1,7 @@
+<section {{ wrapper_attrs|raw }}>
+	{% if has_image %}
+		{% include 'blocks/textWithImage/_with-image.twig' %}
+	{% else %}
+		{% include 'blocks/textWithImage/_text-only.twig' %}
+	{% endif %}
+</section>

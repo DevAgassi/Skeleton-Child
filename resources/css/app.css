@@ -1,0 +1,66 @@
+/**
+ * =============================================================================
+ * APP.CSS — Project composition
+ * =============================================================================
+ *
+ * This file decides what the project's stylesheet is made of. The engine's
+ * plumbing (design tokens, Tailwind layer, element defaults, vendor CSS) comes
+ * in whole and is never edited here. Everything below it is a choice: comment
+ * out an engine component the project replaces, add the project's own.
+ *
+ * Import order is load-bearing — component CSS and wp-blocks.css are unlayered,
+ * so a later import wins a specificity tie. WP core-block glue stays last.
+ */
+
+@import "../../../Skeleton/resources/css/main.css";
+
+/*
+ * Project tokens. Values live in this theme's theme.json; the engine knows
+ * nothing about them.
+ *
+ * Inverse surface — the light-on-dark pair a region redeclares its base
+ * tokens from (dark CTA, media overlays) instead of hardcoding colours.
+ *
+ * Media overlays — deliberately theme-independent: a scrim darkens a photo
+ * and the text on it stays light whatever the active theme, because the photo
+ * does not change with the theme.
+ */
+@theme {
+	--color-inverse: var(--wp--custom--color--inverse);
+	--color-inverse-content: var(--wp--custom--color--on-inverse);
+	--color-scrim: var(--wp--custom--color--scrim);
+	--color-on-media: var(--wp--custom--color--on-media);
+}
+
+/* ── Engine components — drop a line when the project ships its own ───────── */
+@import "../../../Skeleton/resources/css/components/flow.css";
+@import "../../../Skeleton/resources/css/components/btn.css";
+@import "../../../Skeleton/resources/css/components/menu.css";
+@import "../../../Skeleton/resources/css/components/badge.css";
+@import "../../../Skeleton/resources/css/components/link.css";
+@import "../../../Skeleton/resources/css/components/pagination.css";
+@import "../../../Skeleton/resources/css/components/breadcrumbs.css";
+@import "../../../Skeleton/resources/css/components/footer.css";
+
+/* ── Project components ───────────────────────────────────────────────────── */
+/* header.css and the footer rules below it style this theme's own chrome —
+   the engine ships a no-JS skeleton and none of this. */
+@import "./components/header.css";
+@import "./components/footer.css";
+@import "./components/post-card.css";
+@import "./components/image-overlays.css";
+@import "./components/sandbox.css";
+
+/* ── WP core-block glue — always last ─────────────────────────────────────── */
+@import "../../../Skeleton/resources/css/wp-blocks.css";
+
+/*
+ * Tailwind scans this root's markup. The engine's own @source rules travel
+ * with main.css above; these cover the project's files.
+ */
+@source "../../blocks/**/*.twig";
+@source "../../views/**/*.twig";
+@source "../../ui/**/*.twig";
+@source "../scripts/**/*.js";
+@source "../../blocks/**/*.php";
+@source "../../blocks/**/*.js";

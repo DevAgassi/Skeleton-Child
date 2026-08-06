@@ -1,0 +1,46 @@
+{#
+  Overlays drawn on top of ui/components/image.twig — the lightbox trigger and
+  the copyright badge. Rendered by the caller, not by the image component, so
+  the engine's <picture> stays a single responsibility.
+
+  Params (pass with `only`):
+    id        (int, required) — attachment ID, same one passed to image.twig
+    alt       (string)        — label; falls back to the attachment title
+    sandbox   (bool)          — render the lightbox trigger button
+    copyright (bool)          — render the copyright badge
+
+  The wrapping element must be position: relative.
+
+  Logic:  resources/scripts/sandbox.js
+  Styles: resources/css/components/image-overlays.css
+#}
+{% set image     = get_image(id) %}
+{% set img_label = (alt is defined and alt) ? alt : image.title %}
+
+{% if image.id %}
+	{% if sandbox is defined and sandbox %}
+		<button
+			class="sandbox-trigger__icon"
+			aria-label="{{ __('Open full image', 'skeleton') }}"
+			data-sandbox-trigger
+			data-src="{{ image.src }}"
+			data-alt="{{ img_label }}"
+			data-width="{{ image.width }}"
+			data-height="{{ image.height }}"
+		>
+			<svg class="icon-expand" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+				<line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+			</svg>
+			<svg class="icon-move" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/>
+				<polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/>
+				<line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
+			</svg>
+		</button>
+	{% endif %}
+
+	{% if copyright is defined and copyright %}
+		{% include 'ui/components/copyright.twig' with { 'label': img_label } only %}
+	{% endif %}
+{% endif %}

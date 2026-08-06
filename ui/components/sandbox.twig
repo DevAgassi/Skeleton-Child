@@ -1,0 +1,23 @@
+{#
+  Media lightbox <dialog>. Included once per page in views/base.twig;
+  opened by any [data-sandbox-trigger] button (see ui/components/image.twig).
+
+  Params: none.
+
+  Logic:  resources/scripts/sandbox.js
+  Styles: resources/css/components/sandbox.css
+#}
+<dialog
+	id="sandbox-dialog"
+	class="sandbox"
+	aria-label="{{ __('Media viewer', 'skeleton') }}"
+>
+	<div class="sandbox__inner">
+		<button class="sandbox__close" id="sandbox-close" aria-label="{{ __('Close', 'skeleton') }}">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+			</svg>
+		</button>
+		<div class="sandbox__media" id="sandbox-media"></div>
+	</div>
+</dialog>

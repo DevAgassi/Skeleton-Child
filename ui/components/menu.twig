@@ -1,0 +1,128 @@
+{#
+  Header navigation menu — 2-3 levels, one template for both variants.
+
+  Params:
+    items  (array, required) — Timber menu items (header_menu.get_items)
+    mobile (bool)            — true: accordion drawer; false/omitted: desktop
+                               dropdown
+
+  Styles: resources/css/components/menu.css, resources/css/components/header.css
+#}
+
+{% if mobile %}
+
+	{# ════════════════════════════════════════════════════════════════════════
+	   MOBILE — accordion, max 2 levels
+	   ════════════════════════════════════════════════════════════════════════ #}
+	{% for item in items %}
+		{% if item.children|length > 0 %}
+			<li class="border-b border-base-300">
+				<div class="flex items-center">
+					<a href="{{ item.link }}" class="flex-1 font-semibold py-3.5 px-2 text-base">
+						{{ item.title }}
+					</a>
+					<button type="button"
+					        class="mobile-toggle flex items-center justify-center w-10 h-10 text-text-secondary hover:text-base-content transition-colors"
+					        aria-expanded="false"
+					        aria-label="{{ __('Toggle submenu', 'skeleton') }}">
+						<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="transition-transform duration-200">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+						</svg>
+					</button>
+				</div>
+				<ul class="hidden pb-2 pl-2">
+					{% for child in item.children %}
+						{% if child.children|length > 0 %}
+							<li>
+								<div class="flex items-center">
+									<a href="{{ child.link }}" class="flex-1 py-2.5 px-2 text-sm text-text-secondary hover:text-primary transition-colors">
+										{{ child.title }}
+									</a>
+									<button type="button"
+									        class="mobile-toggle flex items-center justify-center w-10 h-10 text-text-secondary hover:text-base-content transition-colors"
+									        aria-expanded="false"
+									        aria-label="{{ __('Toggle submenu', 'skeleton') }}">
+										<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="transition-transform duration-200">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+										</svg>
+									</button>
+								</div>
+								<ul class="hidden pb-1 pl-4">
+									{% for grandchild in child.children %}
+										<li>
+											<a href="{{ grandchild.link }}" class="block py-2 px-2 text-sm text-text-secondary hover:text-primary transition-colors">
+												{{ grandchild.title }}
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</li>
+						{% else %}
+							<li>
+								<a href="{{ child.link }}" class="block py-2.5 px-2 text-sm text-text-secondary hover:text-primary transition-colors">
+									{{ child.title }}
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</li>
+		{% else %}
+			<li class="border-b border-base-300">
+				<a href="{{ item.link }}" class="block font-semibold py-3.5 px-2 text-base">
+					{{ item.title }}
+				</a>
+			</li>
+		{% endif %}
+	{% endfor %}
+
+{% else %}
+
+	{# ════════════════════════════════════════════════════════════════════════
+	   DESKTOP — dropdown, 2-3 levels
+	   ════════════════════════════════════════════════════════════════════════ #}
+	{% for item in items %}
+		{% if item.children|length > 0 %}
+			<li class="nav-item">
+				<a href="{{ item.link }}" class="nav-link">
+					{{ item.title }}
+					<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="opacity-40">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+					</svg>
+				</a>
+
+				<ul class="nav-dropdown">
+					{% for child in item.children %}
+						<li class="nav-item">
+							<a href="{{ child.link }}" class="nav-dropdown-link">
+								{{ child.title }}
+								{% if child.children|length > 0 %}
+									<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="shrink-0 opacity-40 ml-auto">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+									</svg>
+								{% endif %}
+							</a>
+
+							{% if child.children|length > 0 %}
+								<ul class="nav-dropdown nav-dropdown--nested">
+									{% for grandchild in child.children %}
+										<li>
+											<a href="{{ grandchild.link }}" class="nav-dropdown-link">
+												{{ grandchild.title }}
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			</li>
+		{% else %}
+			<li class="nav-item">
+				<a href="{{ item.link }}" class="nav-link">{{ item.title }}</a>
+			</li>
+		{% endif %}
+	{% endfor %}
+
+{% endif %}

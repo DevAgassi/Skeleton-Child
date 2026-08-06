@@ -1,0 +1,47 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rimraf ./dist/.vite/manifest.json && vite",
+    "dev:watch": "vite --strictPort false",
+    "build": "vite build",
+    "build:watch": "vite build --watch",
+    "preview": "vite build && vite preview",
+    "core": "node core/.vite/index.js"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "@preact/signals": "^2.5.1",
+    "@prettier/plugin-php": "^0.25.0",
+    "esbuild": "^0.25.12",
+    "postcss-prefix-selector": "^2.1.1",
+    "preact": "^10.28.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-jinja-template": "^2.2.0",
+    "rimraf": "^6.1.2",
+    "rollup-plugin-external-globals": "^0.13.0",
+    "sass-embedded": "^1.96.0",
+    "terser": "^5.46.2",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.5",
+    "vite-plugin-dev-manifest": "^1.4.1",
+    "vite-plugin-externals": "^0.6.2"
+  },
+  "dependencies": {
+    "@fontsource-variable/montserrat": "^5.2.8",
+    "@tailwindcss/vite": "^4.1.18",
+    "@wordpress/interactivity": "^6.37.0",
+    "fast-glob": "^3.3.3",
+    "glob": "^13.0.0",
+    "gsap": "^3.12.2",
+    "laravel-vite-plugin": "^2.0.1",
+    "node-fetch": "^3.3.2",
+    "postcss": "^8.5.6",
+    "save": "^2.9.0",
+    "swiper": "^12.0.3",
+    "tailwindcss": "^4.1.18",
+    "vite-plugin-image-optimizer": "^2.0.3"
+  }
+}

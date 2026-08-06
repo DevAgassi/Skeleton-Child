@@ -1,0 +1,16 @@
+{% if block.image %}
+	{# Hero is above the fold — load eagerly with high priority (LCP) #}
+	<img
+		class="hero__media"
+		src="{{ block.image.url }}"
+		alt="{{ block.image.alt }}"
+		loading="eager"
+		fetchpriority="high"
+	>
+{% endif %}
+
+<div class="hero__overlay" style="{{ hero_style }}"></div>
+
+<div class="hero__content{{ block.content_align ? ' ' ~ block.content_align : '' }}">
+	{% include 'blocks/hero/_content.twig' %}
+</div>

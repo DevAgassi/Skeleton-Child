@@ -1,0 +1,315 @@
+{
+    "key": "group_post_grid_block",
+    "title": "Post Grid",
+    "fields": [
+        {
+            "key": "field_pg_title",
+            "label": "Title",
+            "name": "title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Section heading displayed top-left.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Related work",
+            "maxlength": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_pg_card_style",
+            "label": "Card Style",
+            "name": "card_style",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Overlay: image fills card, hover reveals text. Standard: image top, text below.",
+            "required": 1,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "standard": "Standard (image + text)",
+                "overlay": "Overlay (hover)"
+            },
+            "default_value": "standard",
+            "layout": "horizontal",
+            "return_format": "value",
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_pg_selection_type",
+            "label": "Selection Type",
+            "name": "selection_type",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Manual: hand-pick posts. Taxonomy: pull by category or tag.",
+            "required": 1,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "manual": "Manual selection",
+                "taxonomy": "By taxonomy"
+            },
+            "default_value": "manual",
+            "layout": "horizontal",
+            "return_format": "value",
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_pg_initial_count",
+            "label": "Initial Display Count",
+            "name": "initial_count",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Number of posts shown initially. Show More appears if total exceeds this.",
+            "required": 1,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "3": "3",
+                "6": "6",
+                "9": "9"
+            },
+            "default_value": 3,
+            "layout": "horizontal",
+            "return_format": "value",
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_pg_posts",
+            "label": "Posts",
+            "name": "posts",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "Select posts from any post type. Minimum 3.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_pg_selection_type",
+                        "operator": "==",
+                        "value": "manual"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [],
+            "post_status": [
+                "publish"
+            ],
+            "taxonomy": [],
+            "filters": [
+                "search",
+                "post_type",
+                "taxonomy"
+            ],
+            "min": 3,
+            "max": 0,
+            "return_format": "object",
+            "elements": [
+                "featured_image"
+            ],
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_pg_taxonomy_type",
+            "label": "Taxonomy",
+            "name": "taxonomy_type",
+            "aria-label": "",
+            "type": "radio",
+            "instructions": "Filter posts by category or tag.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_pg_selection_type",
+                        "operator": "==",
+                        "value": "taxonomy"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "category": "Category",
+                "tag": "Tag"
+            },
+            "default_value": "category",
+            "layout": "horizontal",
+            "return_format": "value",
+            "other_choice": 0,
+            "save_other_choice": 0,
+            "allow_null": 0
+        },
+        {
+            "key": "field_pg_category_terms",
+            "label": "Categories",
+            "name": "category_terms",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select one or more categories. Multiple → filter tabs appear.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_pg_selection_type",
+                        "operator": "==",
+                        "value": "taxonomy"
+                    },
+                    {
+                        "field": "field_pg_taxonomy_type",
+                        "operator": "==",
+                        "value": "category"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "category",
+            "field_type": "multi_select",
+            "return_format": "object",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "multiple": 1,
+            "allow_null": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_pg_tag_terms",
+            "label": "Tags",
+            "name": "tag_terms",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Select one or more tags. Multiple → filter tabs appear.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_pg_selection_type",
+                        "operator": "==",
+                        "value": "taxonomy"
+                    },
+                    {
+                        "field": "field_pg_taxonomy_type",
+                        "operator": "==",
+                        "value": "tag"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "post_tag",
+            "field_type": "multi_select",
+            "return_format": "object",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "multiple": 1,
+            "allow_null": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_pg_explore_link_enabled",
+            "label": "Show Explore Link",
+            "name": "explore_link_enabled",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Auto-generates a link to the archive page when a single category, tag, or post type is selected.",
+            "required": 0,
+            "conditional_logic": false,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_pg_explore_link_override",
+            "label": "Explore Link Override",
+            "name": "explore_link_override",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "Overrides the auto-generated explore link.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_pg_explore_link_enabled",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "block",
+                "operator": "==",
+                "value": "acf\/post-grid"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "display_title": "",
+    "allow_ai_access": false,
+    "ai_description": "",
+    "modified": 1782066576
+}

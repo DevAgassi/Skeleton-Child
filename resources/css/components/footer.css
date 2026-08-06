@@ -1,0 +1,62 @@
+/* ─── FOOTER — project chrome ─────────────────────────────────────────────── */
+
+/*
+ * Styles this theme's footer markup (ui/layout/footer.twig): the column grid's
+ * headings, the link treatment, the copyright rule and the mobile pill tiles.
+ *
+ * The engine owns only the neutral surface and the gap above it, and that
+ * arrives from its own footer.css earlier in app.css. Everything here is
+ * additive — never redeclare what the engine already sets.
+ */
+.page-footer {
+  .footer-col-heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .footer-content {
+    border-bottom: 1px solid var(--color-border-subtle);
+
+    @media (min-width: 64rem) {
+      border-bottom: none;
+    }
+  }
+
+  .footer-nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-base-content);
+    text-decoration: none;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease;
+
+    &:hover {
+      color: var(--color-secondary);
+    }
+  }
+
+  .footer-copyright {
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 1.5rem;
+    text-align: center;
+  }
+}
+
+/* Mobile pill tiles — top-level media query to avoid nested @media processing issues */
+@media (max-width: calc(64rem - 0.0625rem)) {
+  .page-footer .footer-nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3125rem 0.875rem;
+    font-size: 0.8125rem;
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
+}

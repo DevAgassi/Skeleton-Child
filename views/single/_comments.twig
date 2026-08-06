@@ -1,0 +1,48 @@
+{% set has_comments = post_comments|length > 0 %}
+{% if comments_open or has_comments %}
+<section class="post-comments" id="comments">
+	<div class="container-content">
+
+		{% if has_comments %}
+		<div class="post-comments__list">
+			<h2 class="post-comments__heading">
+				{{ post_comments|length }}
+				{{ post_comments|length == 1 ? __('Comment', 'skeleton') : __('Comments', 'skeleton') }}
+			</h2>
+
+			{% for comment in post_comments %}
+			<article class="post-comments__item" id="comment-{{ comment.ID }}">
+				<div class="post-comments__avatar" aria-hidden="true">
+					<img
+						src="{{ comment.avatar(48) }}"
+						alt="{{ comment.author.name }}"
+						width="48"
+						height="48"
+						loading="lazy"
+					/>
+				</div>
+				<div class="post-comments__body">
+					<div class="post-comments__meta">
+						<span class="post-comments__author">{{ comment.author.name }}</span>
+						<time class="post-comments__date" datetime="{{ comment.date('Y-m-d') }}">
+							{{ comment.date('F j, Y') }}
+						</time>
+					</div>
+					<div class="post-comments__content">
+						{{ comment.content|raw }}
+					</div>
+				</div>
+			</article>
+			{% endfor %}
+		</div>
+		{% endif %}
+
+		{% if comments_open %}
+		<div class="post-comments__form">
+			{{ comment_form() }}
+		</div>
+		{% endif %}
+
+	</div>
+</section>
+{% endif %}

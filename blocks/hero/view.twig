@@ -1,0 +1,4 @@
+{# block.type is whitelisted in Block.php — safe for dynamic include #}
+<section {{ wrapper_attrs|raw }}>
+	{% include 'blocks/hero/_' ~ block.type ~ '.twig' %}
+</section>

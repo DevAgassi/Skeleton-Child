@@ -1,0 +1,22 @@
+{% if block.video %}
+	{# Self-hosted video only: autoplay requires muted + playsinline #}
+	<video
+		class="hero__media"
+		autoplay
+		muted
+		loop
+		playsinline
+		preload="metadata"
+		{% if block.poster %}poster="{{ block.poster.url }}"{% endif %}
+	>
+		<source src="{{ block.video.url }}" type="{{ block.video.mime_type }}">
+	</video>
+{% elseif block.poster %}
+	<img class="hero__media" src="{{ block.poster.url }}" alt="{{ block.poster.alt }}" loading="eager" fetchpriority="high">
+{% endif %}
+
+<div class="hero__overlay" style="{{ hero_style }}"></div>
+
+<div class="hero__content{{ block.content_align ? ' ' ~ block.content_align : '' }}">
+	{% include 'blocks/hero/_content.twig' %}
+</div>

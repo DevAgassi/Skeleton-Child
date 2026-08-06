@@ -1,0 +1,40 @@
+{
+  "$schema": "https://advancedcustomfields.com/schemas/json/main/block.json",
+  "name": "acf/accordion",
+  "title": "Accordion",
+  "description": "Expandable list with a title and collapsible items (label + description).",
+  "keywords": ["accordion", "faq", "list", "expand", "toggle"],
+  "category": "custom-acf",
+  "icon": {
+    "src": "list-view",
+    "background": "var(--wp--preset--color--primary)",
+    "foreground": "#fff"
+  },
+  "supports": {
+    "jsx": true,
+    "multiple": true,
+    "align": ["wide"],
+    "spacing": {
+      "margin": true,
+      "padding": false
+    }
+  },
+  "example": {
+    "attributes": {
+      "data": {
+        "_is_preview": true,
+        "preview_image_help": "/blocks/accordion/preview.png"
+      }
+    }
+  },
+  "attributes": {
+    "align": { "type": "string" }
+  },
+  "apiVersion": 3,
+  "acf": {
+    "blockVersion": 3,
+    "mode": "preview",
+    "autoInlineEditing": false,
+    "renderCallback": "App\\Blocks\\Accordion\\Block::renderCallback"
+  }
+}
