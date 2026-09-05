@@ -25,5 +25,17 @@
 
 namespace Child;
 
-// Intentionally minimal — project code lives in blocks/, views/, ui/,
-// resources/ and functions/.
+// Composer autoload for project-only packages (added via `composer require`
+// in this theme). Both this theme's composer.json and the parent's set an
+// explicit, distinct `autoloader-suffix` — without that, Composer can
+// generate the same ComposerAutoloaderInit{hash} class name for unrelated
+// projects, and loading both vendor/autoload.php in one request fatals with
+// "Cannot redeclare class". Do not remove either suffix.
+$childAutoload = __DIR__ . '/vendor/autoload.php';
+
+if (file_exists($childAutoload)) {
+    require_once $childAutoload;
+}
+
+// Intentionally minimal otherwise — project code lives in blocks/, views/,
+// ui/, resources/ and functions/.
