@@ -1,0 +1,19 @@
+/* ─── LINK ─────────────────────────────────────────────────────────────────── */
+@layer components {
+  .link {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 150ms ease;
+  }
+
+  .link-primary   { color: var(--color-primary); }
+  .link-secondary { color: var(--color-secondary); }
+  .link-accent    { color: var(--color-accent); }
+  .link-neutral   { color: var(--color-neutral-content); }
+
+  .link-hover {
+    text-decoration: none;
+    &:hover { text-decoration: underline; }
+  }
+}

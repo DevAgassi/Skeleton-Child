@@ -32,12 +32,12 @@
 	--color-on-media: var(--wp--custom--color--on-media);
 }
 
+/* Project-level container utilities and block spacing — moved out of the
+   engine, evaluated here to see whether they stay project-only. */
+@import "./main.css";
+
 /* ── Engine components — drop a line when the project ships its own ───────── */
-@import "../../../Skeleton/resources/css/components/flow.css";
-@import "../../../Skeleton/resources/css/components/btn.css";
 @import "../../../Skeleton/resources/css/components/menu.css";
-@import "../../../Skeleton/resources/css/components/badge.css";
-@import "../../../Skeleton/resources/css/components/link.css";
 @import "../../../Skeleton/resources/css/components/pagination.css";
 @import "../../../Skeleton/resources/css/components/breadcrumbs.css";
 @import "../../../Skeleton/resources/css/components/footer.css";
@@ -45,6 +45,10 @@
 /* ── Project components ───────────────────────────────────────────────────── */
 /* header.css and the footer rules below it style this theme's own chrome —
    the engine ships a no-JS skeleton and none of this. */
+@import "./components/flow.css";
+@import "./components/btn.css";
+@import "./components/badge.css";
+@import "./components/link.css";
 @import "./components/header.css";
 @import "./components/footer.css";
 @import "./components/post-card.css";
@@ -64,3 +68,6 @@
 @source "../scripts/**/*.js";
 @source "../../blocks/**/*.php";
 @source "../../blocks/**/*.js";
+
+
+@import "./components/swiper.css" layer(components);

@@ -1,0 +1,7 @@
+.flow > * + * {
+    margin-block-start: var(--flow-gap);
+}
+
+.flow > :first-child {
+    margin-block-start: 0;
+}

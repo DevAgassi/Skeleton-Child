@@ -1,0 +1,23 @@
+/* =============================================================================
+   BLOCK SPACING
+   Each content block has py-8 (32px). Adjacent blocks = 64px total gap.
+   Hero has no bottom padding, so the next block compensates with pt-16 (64px).
+   ============================================================================= */
+
+@layer base {
+  .hero-block + * {
+    padding-top: calc(var(--spacing) * 16);
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+  max-width: var(--wp--style--global--wide-size);
+}
+
+@utility container-content {
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+  max-width: var(--wp--style--global--content-size);
+}
