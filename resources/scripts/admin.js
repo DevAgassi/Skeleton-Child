@@ -3,4 +3,4 @@
  */
 
 import "../css/admin.css";
-import "../../../Skeleton/resources/scripts/admin-boot";
+import "@skeleton/resources/scripts/admin-boot";

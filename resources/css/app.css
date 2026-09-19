@@ -12,7 +12,7 @@
  * so a later import wins a specificity tie. WP core-block glue stays last.
  */
 
-@import "../../../Skeleton/resources/css/main.css";
+@import "@skeleton/resources/css/main.css";
 
 /*
  * Project tokens. Values live in this theme's theme.json; the engine knows
@@ -37,10 +37,10 @@
 @import "./main.css";
 
 /* ── Engine components — drop a line when the project ships its own ───────── */
-@import "../../../Skeleton/resources/css/components/menu.css";
-@import "../../../Skeleton/resources/css/components/pagination.css";
-@import "../../../Skeleton/resources/css/components/breadcrumbs.css";
-@import "../../../Skeleton/resources/css/components/footer.css";
+@import "@skeleton/resources/css/components/menu.css";
+@import "@skeleton/resources/css/components/pagination.css";
+@import "@skeleton/resources/css/components/breadcrumbs.css";
+@import "@skeleton/resources/css/components/footer.css";
 
 /* ── Project components ───────────────────────────────────────────────────── */
 /* header.css and the footer rules below it style this theme's own chrome —
@@ -56,7 +56,7 @@
 @import "./components/sandbox.css";
 
 /* ── WP core-block glue — always last ─────────────────────────────────────── */
-@import "../../../Skeleton/resources/css/wp-blocks.css";
+@import "@skeleton/resources/css/wp-blocks.css";
 
 /*
  * Tailwind scans this root's markup. The engine's own @source rules travel
