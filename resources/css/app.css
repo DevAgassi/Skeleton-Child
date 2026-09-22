@@ -12,7 +12,7 @@
  * so a later import wins a specificity tie. WP core-block glue stays last.
  */
 
-@import "@skeleton/resources/css/main.css";
+@import "./plumbing.css";
 
 /*
  * Project tokens. Values live in this theme's theme.json; the engine knows
@@ -36,11 +36,12 @@
    engine, evaluated here to see whether they stay project-only. */
 @import "./main.css";
 
-/* ── Engine components — drop a line when the project ships its own ───────── */
-@import "@skeleton/resources/css/components/menu.css";
-@import "@skeleton/resources/css/components/pagination.css";
-@import "@skeleton/resources/css/components/breadcrumbs.css";
-@import "@skeleton/resources/css/components/footer.css";
+/* ── Shared components — moved in from the engine, not project-specific ──── */
+/* menu.css dropped: ui/components/menu.twig is fully this project's own
+   (nav-item, nav-link, nav-dropdown classes) — none of the .menu,
+   .menu-horizontal, .menu-lg it used to carry ever matched it. */
+@import "./components/pagination.css";
+@import "./components/breadcrumbs.css";
 
 /* ── Project components ───────────────────────────────────────────────────── */
 /* header.css and the footer rules below it style this theme's own chrome —
@@ -56,7 +57,7 @@
 @import "./components/sandbox.css";
 
 /* ── WP core-block glue — always last ─────────────────────────────────────── */
-@import "@skeleton/resources/css/wp-blocks.css";
+@import "./wp-blocks.css";
 
 /*
  * Tailwind scans this root's markup. The engine's own @source rules travel

@@ -4,11 +4,18 @@
  * Styles this theme's footer markup (ui/layout/footer.twig): the column grid's
  * headings, the link treatment, the copyright rule and the mobile pill tiles.
  *
- * The engine owns only the neutral surface and the gap above it, and that
- * arrives from its own footer.css earlier in app.css. Everything here is
- * additive — never redeclare what the engine already sets.
+ * The first block below (background + top gap) used to come from the
+ * engine's own footer.css, imported separately — moved here now that this
+ * theme owns the whole build. Kept as its own declaration rather than
+ * merged into the nested rule below: a project that redeclares the base
+ * tokens on .page-footer for a dark footer still needs this to resolve
+ * plainly against them, the same as it did as a separate import.
  */
 .page-footer {
+  background-color: var(--color-base-200);
+  color: var(--color-base-content);
+  margin-top: clamp(2.5rem, 6vw, 5.625rem); /* 40px → 90px */
+
   .footer-col-heading {
     font-size: 0.75rem;
     font-weight: 700;

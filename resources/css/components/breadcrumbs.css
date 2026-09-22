@@ -1,0 +1,42 @@
+.breadcrumbs {
+  padding-block: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &:not(:last-child)::after {
+      content: "/";
+      color: var(--color-text-secondary);
+      opacity: 0.5;
+    }
+  }
+
+  .breadcrumbs__link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 150ms ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  .breadcrumbs__current {
+    color: var(--color-base-content);
+    font-weight: 500;
+  }
+}

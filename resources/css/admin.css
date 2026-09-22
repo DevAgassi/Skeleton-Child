@@ -1,10 +1,10 @@
 /**
- * Editor composition — the project bundle plus the engine's editor-only fixes.
+ * Editor composition — the project's own bundle.
  *
  * Points at this root's app.css, so block previews in the editor are styled
- * exactly as the front end.
+ * exactly as the front end. The engine's editor-only fixes (vendor/editor.css)
+ * are registered separately, straight from the parent theme — see
+ * WordpressServiceProvider::register_engine_editor_style() in Skeleton.
  */
 
 @import "./app.css";
-
-@import "@skeleton/resources/css/vendor/editor.css";

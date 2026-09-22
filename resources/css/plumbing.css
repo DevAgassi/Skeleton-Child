@@ -1,0 +1,198 @@
+/**
+ * =============================================================================
+ * PLUMBING.CSS — Tailwind bootstrap + design-token mapping
+ * =============================================================================
+ *
+ * Formerly the engine's resources/css/main.css, loaded across a sibling
+ * directory via the (removed) @skeleton alias. Now that this project owns its
+ * whole build with nothing shared live, it lives here directly — same
+ * content, moved rather than duplicated.
+ *
+ * Structure:
+ *   1. Design tokens — @theme static mapping, no values
+ *   2. Tailwind core — @import "tailwindcss"
+ *   3. Layers        — base, vendor
+ *
+ * PLUMBING ONLY:
+ *   This file carries what no project ever switches off — tokens, the Tailwind
+ *   layer, element defaults, vendor CSS. Design-system components and the WP
+ *   core-block glue are composed on top by an entry file (app.css), because a
+ *   project that rewrites the header wants to drop this file's header.css
+ *   without losing the token pipeline. See resources/css/app.css.
+ *
+ * TOKEN SYSTEM:
+ *   theme.json is the single source of truth for every value. This file only
+ *   maps WordPress-generated properties onto Tailwind token names.
+ *
+ *   Mapping uses plain `@theme`, never `@theme inline`. `inline` resolves the
+ *   token at build time and bakes the WordPress property into every utility,
+ *   so `bg-base-100` compiles to var(--wp--preset--color--background) and the
+ *   token name disappears — redeclaring --color-base-100 on a container then
+ *   has no effect on utility classes, only on hand-written CSS. `inline` would
+ *   only be correct if the *referenced* property changed at runtime, which is
+ *   not how this theme works.
+ *
+ *   Components must reference --color-*, --radius-*, --text-* — never
+ *   --wp--preset--* directly. A direct read silently opts that element out of
+ *   any region that redeclares tokens (footer, dark CTA variants).
+ */
+
+/* =============================================================================
+   1. DESIGN TOKENS — mapping only, values live in theme.json
+   ============================================================================= */
+
+/* `static`, not plain `@theme`: Tailwind v4 only keeps a theme variable in
+   the compiled output when it sees a matching utility class in scanned
+   content (twig/php). Hand-written component CSS that reads a token via
+   var(--spacing-fluid-sm) etc. doesn't count as "usage" for that scan, so
+   any token never also used as a literal utility class (gap-fluid-sm) gets
+   silently tree-shaken to nothing — it stays valid CSS, just resolves to
+   an empty value everywhere, collapsing padding/gap to 0 with no error.
+   This bit --spacing-fluid-xs/-sm project-wide; `static` keeps every token
+   here regardless of whether a utility class happens to reference it,
+   matching this file's own "no project switches this off" intent. */
+@theme static {
+  /* ── Backgrounds ───────────────────────────────────────────────────────── */
+  --color-base-100:     var(--wp--preset--color--background);
+  --color-base-200:     var(--wp--preset--color--surface);
+  --color-base-300:     var(--wp--custom--color--border);
+  --color-base-content: var(--wp--preset--color--text);
+
+  /* ── Brand ─────────────────────────────────────────────────────────────── */
+  --color-primary:           var(--wp--preset--color--primary);
+  --color-primary-content:   var(--wp--custom--color--on-primary);
+  --color-secondary:         var(--wp--preset--color--secondary);
+  --color-secondary-content: var(--wp--custom--color--on-secondary);
+  --color-accent:            var(--wp--preset--color--accent);
+  --color-accent-content:    var(--wp--custom--color--on-accent);
+
+  /* ── Neutral ───────────────────────────────────────────────────────────── */
+  --color-neutral:         var(--wp--preset--color--neutral);
+  --color-neutral-content: var(--wp--custom--color--on-neutral);
+  --color-text-secondary:  var(--wp--preset--color--text-muted);
+
+  /* ── Status ────────────────────────────────────────────────────────────── */
+  --color-info:            var(--wp--custom--color--info);
+  --color-info-content:    var(--wp--custom--color--on-info);
+  --color-success:         var(--wp--custom--color--success);
+  --color-success-content: var(--wp--custom--color--on-success);
+  --color-warning:         var(--wp--custom--color--warning);
+  --color-warning-content: var(--wp--custom--color--on-warning);
+  --color-error:           var(--wp--custom--color--error);
+  --color-error-content:   var(--wp--custom--color--on-error);
+
+  /* ── Semantic aliases ──────────────────────────────────────────────────── */
+  --color-background: var(--color-base-100);
+  --color-surface:    var(--color-base-200);
+  --color-text:       var(--color-base-content);
+  --color-border:     var(--color-base-300);
+
+  /* ── Form ──────────────────────────────────────────────────────────────── */
+  --color-field-bg:          var(--color-base-200);
+  --color-field-border:      var(--wp--custom--color--field-border);
+  --color-field-placeholder: var(--wp--custom--color--field-placeholder);
+  --color-field-focus:       var(--color-primary);
+
+  /* ── Button states ─────────────────────────────────────────────────────── */
+  --color-btn-disabled-bg: var(--color-neutral);
+  --color-btn-disabled-fg: var(--color-text-secondary);
+
+  /* ── Derived — recalculate automatically on theme switch ───────────────── */
+  --color-primary-dark:    color-mix(in srgb, var(--color-primary), black 15%);
+  --color-text-muted:      color-mix(in srgb, var(--color-base-content), var(--color-background) 10%);
+  --color-btn-ghost-hover: color-mix(in srgb, var(--color-base-content), transparent 92%);
+  --color-border-subtle:   color-mix(in srgb, var(--color-base-content), transparent 85%);
+  --color-border-strong:   color-mix(in srgb, var(--color-base-content), transparent 75%);
+
+  /* ── Typography ────────────────────────────────────────────────────────── */
+  --font-primary:        var(--wp--custom--font--primary);
+  --font-secondary:      var(--wp--custom--font--secondary);
+  --font-mono:           var(--wp--custom--font--mono);
+  --default-font-family: var(--font-secondary);
+
+  --text-sm--line-height:   var(--wp--custom--leading--sm);
+  --text-base--line-height: var(--wp--custom--leading--base);
+  --text-lg--line-height:   var(--wp--custom--leading--lg);
+  --text-xl--line-height:   var(--wp--custom--leading--xl);
+  --text-2xl--line-height:  var(--wp--custom--leading--xxl);
+
+  /* Heading scale — mapped here so text-h* utilities get generated */
+  --text-h1: var(--wp--preset--font-size--h-1);
+  --text-h2: var(--wp--preset--font-size--h-2);
+  --text-h3: var(--wp--preset--font-size--h-3);
+  --text-h4: var(--wp--preset--font-size--h-4);
+  --text-h5: var(--wp--preset--font-size--h-5);
+  --text-h6: var(--wp--preset--font-size--h-6);
+
+  --text-nav-item: var(--wp--custom--text--nav);
+
+  /* ── Shape ─────────────────────────────────────────────────────────────── */
+  --radius-base:  var(--wp--custom--radius--base);
+  --radius-field: var(--wp--custom--radius--field);
+  --radius-box:   var(--wp--custom--radius--box);
+
+  /* ── Shadows ───────────────────────────────────────────────────────────── */
+  --shadow-sm: var(--wp--preset--shadow--sm);
+  --shadow:    var(--wp--preset--shadow--base);
+  --shadow-md: var(--wp--preset--shadow--md);
+  --shadow-lg: var(--wp--preset--shadow--lg);
+
+  /*
+   * Tailwind scale base — utility framework config, not theming. It has no
+   * meaning outside Tailwind and nothing in theme.json maps to it. The
+   * numeric scale (p-4, gap-6, size-8) stays static on purpose: fluid sizing
+   * belongs to gaps and section rhythm, not to element dimensions.
+   */
+  --spacing: 0.25rem;
+
+  /*
+   * Fluid spacing scale — clamp() values from theme.json spacingSizes.
+   * Generates p-fluid-xs … gap-fluid-2xl. Use these instead of breakpoint
+   * modifiers (md:py-16 and friends) for gaps, paddings and margins.
+   *
+   * The "fluid" infix is load-bearing: plain --spacing-md would shadow
+   * Tailwind's --container-md for every named sizing utility, silently
+   * turning max-w-md (28rem) into ~2rem.
+   */
+  --spacing-fluid-xs:  var(--wp--preset--spacing--xs);
+  --spacing-fluid-sm:  var(--wp--preset--spacing--sm);
+  --spacing-fluid-md:  var(--wp--preset--spacing--md);
+  --spacing-fluid-lg:  var(--wp--preset--spacing--lg);
+  --spacing-fluid-xl:  var(--wp--preset--spacing--xl);
+  --spacing-fluid-2xl: var(--wp--preset--spacing--2-xl);
+}
+
+/* Plain custom properties — consumed by CSS, not exposed as utilities. */
+:root {
+  color-scheme: light;
+
+  --container-px: var(--wp--custom--layout--gutter);
+  --nav-h:        var(--wp--custom--layout--nav-height);
+  --flow-gap:     var(--wp--custom--leading--flow);
+}
+
+/* =============================================================================
+   2. TAILWIND CORE
+   ============================================================================= */
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./vendor/preflight.css" layer(base);
+/*
+ * source(none) turns off automatic content detection. Detection is anchored to
+ * the directory the build runs from, which makes the output depend on *who*
+ * builds: the engine alone picked up class names quoted in docs/*.md, a child
+ * theme driving the build would not. Every scanned path is declared in
+ * section 3 instead, so any root produces the same utilities.
+ */
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+/* =============================================================================
+   3. LAYERS
+   ============================================================================= */
+   /* Source scanning lives in app.css now: this file used to also cover the
+      engine's own tree (a separate root from this project's), but now that
+      it lives directly in this theme there is only one root to scan, and
+      app.css already declares it — a second, identical @source list here
+      would just be a silent-to-maintain duplicate of that one. */
+
+@import "./base.css" layer(base);

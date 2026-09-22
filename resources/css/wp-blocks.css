@@ -1,0 +1,66 @@
+/* WP core block extensions and editor "Additional CSS class" hooks.
+   Global by design — these target WordPress-generated markup, not theme
+   components. Deliberately unlayered so they win over layered styles. */
+
+/* ─── core/image — style variation + width classes ───────────────────────── */
+.wp-block-image {
+  &.is-style-two-corners img {
+    border-radius: 2rem 0 2rem 0;
+  }
+
+  &.w-50  { width: 50%  !important; }
+  &.w-75  { width: 75%  !important; }
+  &.w-100 { width: 100% !important; }
+
+  &.w-50,
+  &.w-75,
+  &.w-100 {
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &.w-50.aligncenter,
+  &.w-75.aligncenter {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ─── Content wrapper — alignment + first-section offset ─────────────────── */
+.content-wrapper {
+  > :where(.alignleft) {
+    display: flex;
+    justify-self: flex-start;
+    margin: 0;
+  }
+
+  > :where(.alignright) {
+    display: flex;
+    justify-self: flex-end;
+    margin: 0;
+  }
+
+  > .section-block:first-of-type > [data-block-wrapper] {
+    padding-top: 35px;
+
+    @media (min-width: 768px) {
+      padding-top: 70px;
+    }
+  }
+}
+
+/* ─── ACF InnerBlocks wrapper ────────────────────────────────────────────── */
+.acf-innerblocks-container {
+  display: contents; /* prevents div from affecting parent grid/flex layout */
+}
+
+/* ─── "sidebar-sticky" — Additional CSS class for core/column ────────────── */
+@media (min-width: 1024px) {
+  .sidebar-sticky {
+    position: sticky;
+    top: calc(var(--nav-h) + 1.5rem);
+    align-self: start;
+  }
+}

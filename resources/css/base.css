@@ -1,0 +1,137 @@
+/* =============================================================================
+   BASE — Global HTML element styles
+   ============================================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 6px;
+  z-index: 9999;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  top: 6px;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  padding: 0.5rem 1rem;
+  background: var(--color-background);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Text selection */
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-dark) var(--color-background);
+}
+
+/* =============================================================================
+   WP BLOCK LAYOUT
+   Adds horizontal padding to constrained Group containers so core blocks
+   have the same gutters as our Tailwind .container/.container-content.
+   Full-width blocks use negative margins to escape the padding.
+   ============================================================================= */
+
+/* Gutters for core blocks — ACF blocks excluded (they manage own padding via .container) */
+.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull):not([class*="wp-block-acf-"])) {
+  padding-inline: var(--container-px);
+}
+
+/* ACF blocks default to wide-size; overrides WP-generated content-size constraint.
+   Float-aligned blocks (alignleft/alignright) are excluded — they use WP's float layout. */
+.is-layout-constrained > [class*="wp-block-acf-"]:not(.alignfull):not(.alignleft):not(.alignright) {
+  max-inline-size: var(--wp--style--global--wide-size);
+  margin-inline: auto;
+}
+
+/* Full-bleed blocks (alignfull root, e.g. hero): the root escapes the layout
+   for background media, .block-content inside re-creates container behavior. */
+.is-layout-constrained > .alignfull > .is-contained {
+  width: 100%;
+  max-width: var(--wp--style--global--content-size);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+
+.is-layout-constrained > .alignfull > .alignwide {
+  max-width: var(--wp--style--global--wide-size);
+}
+
+.is-layout-constrained > .alignfull > .alignfull {
+  max-width: none;
+}
+
+/* =============================================================================
+   WP BLOCK TYPOGRAPHY
+   Heading margin reset lives here (not in theme.json) so Tailwind utilities
+   can override it — theme.json CSS is injected outside @layer and beats
+   everything, while @layer base is correctly overridden by @layer utilities.
+   ============================================================================= */
+
+/* Reset browser default heading margins */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+/* Proportional spacing for WP core headings — em scales with heading font-size */
+.wp-block-heading {
+  margin-top: calc(0.6em + 0.25rem);
+  margin-bottom: 0.125em;
+}
+
+/* First heading in a content block should have no top margin */
+.acf-innerblocks-container > :is(h1, h2, h3, h4, h5, h6):first-child,
+.acf-innerblocks-container > .wp-block-heading:first-child {
+  margin-top: 0 !important;
+}
+
+/* =============================================================================
+   WP BLOCK: core/paragraph
+   ============================================================================= */
+
+/* Spacing — scoped to block containers, not global, to avoid UI conflicts.
+   Alignment + font-size classes are injected by WP automatically — no CSS needed. */
+.acf-innerblocks-container > .wp-block-paragraph {
+  margin-top: calc(var(--spacing) * 6);
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Sandbox lightbox and image overlays live in resources/css/components/
+   (sandbox.css, image.css) — component CSS does not belong in the base layer. */
