@@ -8,12 +8,15 @@
 		{# Background image #}
 		{% if post.thumbnail %}
 			<div class="absolute inset-0" aria-hidden="true">
-				<img
-					class="w-full h-full object-cover"
-					src="{{ post.thumbnail.src('full') }}"
-					alt="{{ post.thumbnail.alt|default(post.title) }}"
-					loading="eager"
-				/>
+				{% include 'ui/components/image.twig' with {
+					'id':              post.thumbnail.ID,
+					'picture_classes': 'contents',
+					'classes':         'w-full h-full object-cover',
+					'sizes':           '100vw',
+					'disableLoading':  true,
+					'fetchpriority':   'high',
+					'alt':             post.thumbnail.alt|default(post.title)
+				} only %}
 			</div>
 		{% endif %}
 
