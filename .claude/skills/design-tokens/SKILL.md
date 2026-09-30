@@ -92,11 +92,14 @@ Each of these cost a session. None is visible by reading the CSS alone.
 - **A component's states carry their own values.** The game tile's scrim differs
   across default, hover and Coming Soon. Pull the component set, not one frame,
   before writing a gradient or a shadow.
-- **Read a fill list with a rendered image, not by reasoning about order.** The
-  tile's fade is listed before the artwork, which was once read here as "under
-  it, therefore invisible", and the tiles shipped for months with unreadable
-  names over pale artwork. Export the node as a PNG and look at it; that settles
-  it in one call.
+- **A fill or an effect in the node data may paint nothing.** The MCP lists
+  them whether or not they are switched on, and it does not say which is on
+  top. Both readings have gone wrong here in one day: a tile's fade was
+  dismissed as hidden under the artwork when it is the thing that makes the
+  name readable, and every panel was given a glow whose effect is switched off
+  in Figma, which read as a white edge around every section. Export the node as
+  a PNG and look at it — one call settles what no amount of reading the JSON
+  will.
 - **Figma variables are the authority, not the frame.** The MCP returns resolved
   styles; the variable collections (Font / Size, Spacing, Colour / *) are where
   the names live. Reading a number off a frame loses its name.
