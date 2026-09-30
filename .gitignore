@@ -42,3 +42,4 @@ cache/
 # Claude Code — ignore local settings, track shared commands
 /.claude/*
 !/.claude/commands/
+!/.claude/skills/
