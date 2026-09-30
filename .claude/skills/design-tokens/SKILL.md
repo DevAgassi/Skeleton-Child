@@ -1,18 +1,19 @@
 ---
 name: design-tokens
-description: Read before writing any CSS in this theme, and before starting a new block, page or section — the project's design tokens (colour, type, spacing, radius, shadow, container) and the search-before-you-create rule that keeps a second copy of an existing value or block from appearing. Use when converting a Figma frame, adding a block, building a page section, or picking a colour, font size, gap, radius or shadow.
+description: Read before writing any CSS in this theme, and before starting a new block, page or section — the project's design tokens (colour, type, spacing, radius, shadow, container), the search-before-you-create rule that keeps a second copy of an existing value or block from appearing, and the traps that have actually cost this project time. Use when converting a Figma frame, adding a block, building a page section, or picking a colour, font size, gap, radius or shadow.
 ---
 
 # Design tokens and the no-duplicates rule
 
 Most of the mess in a theme is not wrong code — it is a second copy of something
 that already existed, made by someone who did not know the first one was there.
-This skill is the two minutes of looking that prevents it.
+This skill is the few minutes of looking that prevents it.
 
 ## 1. Read the inventory first
 
-`docs/design/tokens.md` lists every token the project has, with values and what
-each is for. Read it before the first line of CSS, not after the block is built.
+`docs/design/tokens.md` lists every token the project has, with values, what
+each is called in Figma, and which values are still written out by hand. Read it
+before the first line of CSS, not after the block is built.
 
 ## 2. Search before creating
 
@@ -52,20 +53,62 @@ ls acf-json/group_*.json
 ## 3. Map, do not invent
 
 Take each value off the Figma frame and name its token before writing it:
-colour → `--color-*`, font size → `--text-*` or a `text-h*` utility, gap or
-padding → `--spacing-fluid-*`, width → a `container-*` utility.
+colour → `--color-*`, font size → a rung (`--text-2xl`) or a pair (`--text-h2`),
+gap or padding → the 4px grid, width → a `container-*` utility.
 
-If a value sits between two tokens, take the nearer token — a 4px difference
-nobody can see is not worth a second scale. If nothing fits, say so and ask,
-then follow "Adding a token" in the inventory: `theme.json` first, mapped in
+**The design's names are already ours.** Figma's type steps (`2xs`…`9xl`) and
+its spacing ladder are the Tailwind scale — `text-3xl` in the markup is `3xl` in
+the frame, and every spacing rung is a whole step of `--spacing` (12px is `3`,
+20px is `5`, 40px is `10`). Never introduce a third name for a value that
+already has two.
+
+If a value sits between two rungs, take the nearer one — a 4px difference nobody
+can see is not worth a second scale. If nothing fits, say so and ask, then
+follow "Adding a token" in the inventory: `theme.json` first, mapped in
 `plumbing.css`, documented in `docs/design/tokens.md`. Never a literal in a
 block stylesheet.
 
 Breakpoints are for layout changes only — column counts, stacking, visibility.
-Anything that is a size gets a fluid token, so it scales smoothly between the
-390 and 1920 frames instead of jumping.
+A size that changes between the frames is a clamp between two rungs.
 
-## 4. Leave the note behind
+## 4. Traps this project has already fallen into
+
+Each of these cost a session. None is visible by reading the CSS alone.
+
+- **A utility class can lose, or not exist.** WordPress injects `theme.json`
+  styles outside `@layer`, and unlayered CSS beats everything layered: a
+  `text-h4` class on an `<h3>` does nothing. And a class whose token was never
+  mapped generates no utility at all — `text-large` silently inherited for
+  months. After using a utility, confirm the element's computed value.
+- **Tailwind drops a theme variable no utility uses.** A token read only by
+  block stylesheets — which Tailwind never scans — must be declared
+  `@theme static`, or it is missing at runtime.
+- **`--spacing(n)` works only in stylesheets that reach `app.css`.** A block's
+  `index.css` is compiled without the theme and the build fails outright.
+- **Two clamps with the same ends are not the same ramp.** 24↔40 exists here
+  both ascending and descending. Compare the whole expression.
+- **Colours a digit apart are different colours.** `#06111A` is the panel
+  gradient; `#06121A` is the table backing.
+- **A component's states carry their own values.** The game tile's scrim differs
+  across default, hover and Coming Soon. Pull the component set, not one frame,
+  before writing a gradient or a shadow.
+- **Read a fill list with a rendered image, not by reasoning about order.** The
+  tile's fade is listed before the artwork, which was once read here as "under
+  it, therefore invisible", and the tiles shipped for months with unreadable
+  names over pale artwork. Export the node as a PNG and look at it; that settles
+  it in one call.
+- **Figma variables are the authority, not the frame.** The MCP returns resolved
+  styles; the variable collections (Font / Size, Spacing, Colour / *) are where
+  the names live. Reading a number off a frame loses its name.
+
+## 5. Verify by measuring
+
+Never conclude from a screenshot that a size or spacing is right. Measure the
+computed value in the browser at 390 and 1920 and compare with the frame. After
+changing anything global — a scale, a token, a colour — sweep several pages, not
+the one you were working on.
+
+## 6. Leave the note behind
 
 Finishing a block is not finishing the work. If it introduced a value that a
 second block will want — a surface, a shadow, a grid gap, a card ratio — add it
