@@ -85,6 +85,11 @@ Each of these cost a session. None is visible by reading the CSS alone.
   `@theme static`, or it is missing at runtime.
 - **`--spacing(n)` works only in stylesheets that reach `app.css`.** A block's
   `index.css` is compiled without the theme and the build fails outright.
+- **A token cannot take a parameter.** `var()` inside a custom property is
+  substituted where that property is *declared* — for a theme.json token, on
+  `body` — not where it is read. `linear-gradient(var(--angle, 84deg), …)` as a
+  token always renders at its fallback, whatever the element sets, and nothing
+  warns you. Values that vary per use stay in the component's CSS.
 - **Two clamps with the same ends are not the same ramp.** 24↔40 exists here
   both ascending and descending. Compare the whole expression.
 - **Colours a digit apart are different colours.** `#06111A` is the panel
