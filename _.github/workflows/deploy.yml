@@ -68,7 +68,15 @@ jobs:
 
       - name: Read pinned Skeleton engine version
         id: engine
-        run: echo "ref=$(cat Skeleton-Child/.skeleton-version)" >> $GITHUB_OUTPUT
+        # An empty ref makes actions/checkout fall back to the engine's default
+        # branch, silently deploying unreleased code. Fail instead.
+        run: |
+          REF="$(tr -d '[:space:]' < Skeleton-Child/.skeleton-version 2>/dev/null || true)"
+          if [ -z "$REF" ]; then
+            echo "❌ .skeleton-version is missing or empty — pin an engine release tag"
+            exit 1
+          fi
+          echo "ref=$REF" >> $GITHUB_OUTPUT
 
       # GITHUB_TOKEN is scoped to this repo only, even within the same org —
       # reading a sibling private repo needs its own credential. A read-only
