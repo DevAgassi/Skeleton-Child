@@ -1,0 +1,233 @@
+name: Build and deploy
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SWITCHED OFF. This file lives in `_.github/`, and GitHub only reads
+# `.github/workflows/`, so nothing here ever runs. The starter theme is
+# published to a repository with no hosting behind it; the workflow is kept
+# here so that a project made from it starts with the current way of deploying.
+#
+# To switch it on in a project:
+#   1. Rename the folder  _.github  ->  .github
+#   2. Create `.skeleton-version` in the theme root, holding the tag of the
+#      Skeleton engine release the project is built against (for example 0.0.2).
+#   3. Add the secrets below to the project repository (Settings -> Secrets).
+#   4. Do the one-time server setup described further down.
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Builds this theme (the child) on the runner and rsyncs the result to a
+# server, alongside a pinned release of the Skeleton engine (the parent
+# theme). The build itself is fully self-contained — vite.config.ts has no
+# reference to "../Skeleton" — but WordPress still needs the parent theme
+# physically present on the server, so this workflow deploys both.
+#
+# The parent's version is not "whatever main currently is" — it's whatever
+# tag `.skeleton-version` names. Bumping that file is a deliberate, reviewable
+# commit: an explicit approval to move to a newer engine release, not an
+# automatic pull-in of upstream changes.
+#
+# The engine is checked out from the repository named in the repository
+# variable SKELETON_ENGINE_REPO (default Mirage-Marketing-Ltd/Skeleton) via a
+# read-only deploy key (secrets.SKELETON_ENGINE_SSH_KEY) added to that repo's
+# own Settings -> Deploy keys — GITHUB_TOKEN is always scoped to the current
+# repo only, even within the same org, so it can't read a sibling private repo
+# on its own.
+#
+# Secrets this workflow reads:
+#   SKELETON_ENGINE_SSH_KEY  read-only deploy key of the engine repository
+#   DEPLOY_SSH_KEY           private key Actions uses to reach the server
+#   DEPLOY_HOST              the server's host name
+#   DEPLOY_USER              the SSH user
+#   DEPLOY_STAGING_PATH      the child theme's folder for the `stage` branch
+#   DEPLOY_PROD_PATH         the child theme's folder for the `main` branch
+#   DEPLOY_PARENT_PATH       where the engine goes (one path, shared by both)
+#
+# One-time server setup this workflow does NOT do for you (it only ever
+# fetches/resets an existing clone, never creates one): at DEPLOY_STAGING_PATH /
+# DEPLOY_PROD_PATH, turn whatever's already there into a real git clone of the
+# project repository tracking the matching branch —
+#   git init && git remote add origin git@github.com:<org>/<project-repo>.git
+#   git fetch origin && git checkout -f stage && git reset --hard origin/stage && git clean -fd
+# The server also needs its own read-only deploy key on THAT repo (separate
+# key from DEPLOY_SSH_KEY, which runs the other direction — Actions pushing to
+# the server) for that git fetch to authenticate at all.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [stage, main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the child theme
+        uses: actions/checkout@v4
+        with:
+          path: Skeleton-Child
+
+      - name: Read pinned Skeleton engine version
+        id: engine
+        run: echo "ref=$(cat Skeleton-Child/.skeleton-version)" >> $GITHUB_OUTPUT
+
+      # GITHUB_TOKEN is scoped to this repo only, even within the same org —
+      # reading a sibling private repo needs its own credential. A read-only
+      # deploy key (SSH) added directly to the engine repo's Settings ->
+      # Deploy keys, not a PAT: narrower (this one repo only), no expiry or
+      # approval to manage.
+      - name: Checkout Skeleton engine (pinned release)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.SKELETON_ENGINE_REPO || 'Mirage-Marketing-Ltd/Skeleton' }}
+          ref: ${{ steps.engine.outputs.ref }}
+          path: Skeleton
+          ssh-key: ${{ secrets.SKELETON_ENGINE_SSH_KEY }}
+
+      - name: Install Composer dependencies (child theme)
+        working-directory: Skeleton-Child
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Install Composer dependencies (Skeleton engine)
+        working-directory: Skeleton
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: Skeleton-Child/package-lock.json
+
+      - name: Install dependencies
+        working-directory: Skeleton-Child
+        run: npm ci
+
+      - name: Build dist folder
+        working-directory: Skeleton-Child
+        run: npm run build
+
+      - name: Determine deployment target
+        id: target
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "env=main" >> $GITHUB_OUTPUT
+          else
+            echo "env=staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Deploy to server
+        run: |
+          SERVER_HOST="${{ secrets.DEPLOY_HOST }}"
+          SERVER_USER="${{ secrets.DEPLOY_USER }}"
+          PARENT_PATH="${{ secrets.DEPLOY_PARENT_PATH }}"
+
+          if [ "${{ steps.target.outputs.env }}" = "main" ]; then
+            SERVER_PATH="${{ secrets.DEPLOY_PROD_PATH }}"
+          else
+            SERVER_PATH="${{ secrets.DEPLOY_STAGING_PATH }}"
+          fi
+
+          # Add server to known hosts
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+
+          # Test SSH connection
+          echo "🔍 Testing SSH connection..."
+          if ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
+            "echo 'SSH connection successful'"; then
+            echo "✅ SSH connection test passed"
+          else
+            echo "❌ SSH connection failed"
+            exit 1
+          fi
+
+          # Force-reset the CHILD theme's own checkout to match this branch.
+          # Use the actual git branch name here (github.ref_name), NOT
+          # steps.target.outputs.env — that "staging"/"main" value is only an
+          # internal label for picking which path secret to use, and does not
+          # match the real branch name "stage".
+          # safe.directory uses '*', not $SERVER_PATH: some hosts' home dir is
+          # a symlink (Cloudways: /home/master -> /home/<numeric>.cloudwaysapps.com/...),
+          # and git's ownership check compares against the resolved realpath
+          # — the symlinked $SERVER_PATH value never matches it.
+          # checkout uses -f: the directory may still hold pre-existing
+          # untracked files (e.g. from before this dir became a git clone),
+          # which a plain checkout refuses to overwrite. Safe here since
+          # reset --hard + clean -fd right after already discard everything
+          # not tracked at $BRANCH anyway.
+          BRANCH="${{ github.ref_name }}"
+          echo "📥 Updating server to latest..."
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
+            "git config --global --add safe.directory '*' && \
+            cd $SERVER_PATH && \
+            git fetch origin && \
+            git checkout -f $BRANCH && \
+            git reset --hard origin/$BRANCH && \
+            git clean -fd && \
+            echo '✅ Git reset completed'"
+
+          # Upload dist/ and vendor/ built in CI — no npm/composer needed on server
+          echo "📤 Uploading dist/ and vendor/..."
+          if rsync -az --delete --omit-dir-times --no-perms \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            Skeleton-Child/dist/ "$SERVER_USER@$SERVER_HOST:$SERVER_PATH/dist/" && \
+          rsync -az --delete --omit-dir-times --no-perms \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            Skeleton-Child/vendor/ "$SERVER_USER@$SERVER_HOST:$SERVER_PATH/vendor/"; then
+            echo "✅ Child upload completed successfully"
+          else
+            echo "❌ Child upload failed"
+            exit 1
+          fi
+
+          # Remove build-time files that are not needed on the server
+          echo "🧹 Cleaning up build-time files..."
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
+            "cd $SERVER_PATH && \
+            rm -f vite.config.ts package.json package-lock.json composer.json composer.lock \
+                  .env-example .prettierrc && \
+            rm -rf .github resources/scripts resources/css && \
+            echo '✅ Cleanup completed'"
+
+          # Upload the pinned Skeleton engine release. Plain rsync, no git on
+          # the server side — the CI checkout + composer install above is the
+          # full, ready-to-run artifact, same philosophy as dist/vendor above.
+          # One shared path regardless of prod/staging (same engine release
+          # either way, only the child theme differs per env).
+          echo "📤 Uploading Skeleton engine (${{ steps.engine.outputs.ref }})..."
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
+            "mkdir -p $PARENT_PATH"
+          if rsync -az --delete --omit-dir-times --no-perms \
+            --exclude='.git/' --exclude='.github/' --exclude='.claude/' \
+            --exclude='composer.json' --exclude='composer.lock' \
+            --exclude='.env-example' --exclude='cache/twig/' \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            Skeleton/ "$SERVER_USER@$SERVER_HOST:$PARENT_PATH/"; then
+            echo "✅ Engine upload completed successfully"
+          else
+            echo "❌ Engine upload failed"
+            exit 1
+          fi
+
+          # Twig compiles templates into the engine's cache/twig, and auto_reload
+          # is off outside local — a compiled template is served without ever
+          # looking at the file it came from. The rsync above excludes that
+          # directory (it is server state, not source), so nothing here replaces
+          # it: the deploy has to empty it, or a changed .twig never reaches the
+          # site. The next request recompiles what it needs.
+          # Best effort, and never fatal: the compiled templates belong to the
+          # web server's user, this runs as the deploy user, and on Cloudways
+          # those differ — so most of them cannot be removed from here. What
+          # can be, is. Whatever survives has to be cleared from
+          # Skeleton -> Appearance, and the same ownership is why the engine
+          # rsync above reports "cannot delete non-empty directory: cache".
+          echo "🧹 Clearing what it can of the Twig template cache..."
+          ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
+            "rm -rf $PARENT_PATH/cache/twig/* 2>/dev/null; echo '✅ Twig cache step finished'" \
+            || echo "⚠️ Twig cache could not be cleared — clear it from wp-admin"
+
+          echo "✅ Deployed to ${{ steps.target.outputs.env }} successfully!"
