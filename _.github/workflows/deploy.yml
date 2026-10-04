@@ -206,6 +206,9 @@ jobs:
           # full, ready-to-run artifact, same philosophy as dist/vendor above.
           # One shared path regardless of prod/staging (same engine release
           # either way, only the child theme differs per env).
+          # The engine's test suite and fixtures never reach a server; the
+          # leading slash anchors them to the engine root, so vendor/*/tests
+          # are not matched.
           echo "📤 Uploading Skeleton engine (${{ steps.engine.outputs.ref }})..."
           ssh -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_HOST" \
             "mkdir -p $PARENT_PATH"
@@ -213,6 +216,7 @@ jobs:
             --exclude='.git/' --exclude='.github/' --exclude='.claude/' \
             --exclude='composer.json' --exclude='composer.lock' \
             --exclude='.env-example' --exclude='cache/twig/' \
+            --exclude='/tests/' --exclude='/phpunit.*.xml.dist' \
             -e "ssh -o StrictHostKeyChecking=no" \
             Skeleton/ "$SERVER_USER@$SERVER_HOST:$PARENT_PATH/"; then
             echo "✅ Engine upload completed successfully"
