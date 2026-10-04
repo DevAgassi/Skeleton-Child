@@ -43,3 +43,4 @@ cache/
 /.claude/*
 !/.claude/commands/
 !/.claude/skills/
+!/.claude/CLAUDE.md
